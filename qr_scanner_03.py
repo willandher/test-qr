@@ -12,6 +12,7 @@ import tkinter as tk
 import time
 import RPi.GPIO as GPIO
 import _thread
+import threading
 
 from circuit_breaker import circuit_breaker
 
@@ -35,13 +36,15 @@ class OpenWindow(object):
         label3.config(font=("Arial", 25))
         label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
         window.bind("<FocusIn>")
+
         label1.pack()
         label2.pack()
         label3.pack()
         #GPIO.output(gpi3, False)
         GPIO.output(gpi1, True)
-        os.system(command)
-        window.after(4000, window.destroy)
+        t = threading.Thread(target=os.system(command))
+        t.start()
+        window.after(3000, window.destroy)
         window.mainloop()
 
 
