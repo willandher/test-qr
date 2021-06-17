@@ -66,7 +66,7 @@ class OpenWindow(object):
         window.mainloop()
 
     def openWindow(self, title, label1, label2, label3, color):
-        status = "Algo Salio Mal - Favor Acercarse al Guardia"
+        status = label3
         print(status)
         # GPIO.output(33, True)
         # GPIO.output(40, True)
