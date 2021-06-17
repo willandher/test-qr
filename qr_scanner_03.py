@@ -1,3 +1,5 @@
+import argparse
+from _curses import window
 from logging import root
 import serial
 import http.client
@@ -10,6 +12,7 @@ import urllib.parse as urlparse
 import tkinter as tk
 import time
 import _thread
+
 
 from circuit_breaker import circuit_breaker
 
@@ -87,7 +90,7 @@ class OpenWindow(object):
         label2.pack()
         label3.pack()
         # GPIO.output(40, False)
-        window.after(3000, window.destroy())
+        window.after(3000, destroy_windows)
         window.mainloop()
 
 
