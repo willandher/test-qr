@@ -21,9 +21,6 @@ class OpenWindow(object):
     def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
         status = label3
         print(status)
-        GPIO.output(gpi1, True)
-        #GPIO.output(gpi2, True)
-        os.system(command)
         window = tk.Tk()
         window.attributes('-fullscreen', True)
         window.title(title)
@@ -39,6 +36,9 @@ class OpenWindow(object):
         label1.pack()
         label2.pack()
         label3.pack()
+        GPIO.output(gpi1, True)
+        #GPIO.output(gpi2, True)
+        os.system(command)
         #GPIO.output(gpi3, False)
         window.after(3000, window.destroy)
         window.mainloop()
