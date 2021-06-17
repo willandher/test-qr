@@ -188,7 +188,7 @@ class FullScreenApp(object):
 
         def readSerialOne(Thread):
             #ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
-            connetVacuno = ConnectSite("www.googleapis.com")
+            connetVacuno = ConnectSite()
             while True:
                 #line = ser.readline().decode()
                #if len(line) > 0:
