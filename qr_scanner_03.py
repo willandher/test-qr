@@ -1,5 +1,4 @@
 import argparse
-from _curses import window
 from logging import root
 import serial
 import http.client
@@ -17,56 +16,10 @@ import _thread
 from circuit_breaker import circuit_breaker
 
 
-def destroy_windows():
-    window.destroy()
+
 
 class OpenWindow(object):
 
-    def success(self,title ,message):
-        # GPIO.output(29, True)
-        # GPIO.output(40, True)
-        # os.system('omxplayer -o local pm_valido.mp3')
-        window = tk.Tk()
-        window.attributes('-fullscreen', True)
-        window.title(title)
-        window.configure(bg='green')
-        label1 = tk.Label(window, text="", bg="green")
-        label1.config(font=("Arial", 25))
-        label2 = tk.Label(window, text="Todo Ok", bg="green")
-        label2.config(font=("Arial", 25))
-        label3 = tk.Label(window, text=message, bg="green")
-        label3.config(font=("Arial", 25))
-        label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
-        window.bind("<FocusIn>")
-        label1.pack()
-        label2.pack()
-        label3.pack()
-        # GPIO.output(40, False)
-        window.after(3000, window.destroy())
-        window.mainloop()
-
-    def fail(self, tittle, message):
-        # GPIO.output(33, True)
-        # GPIO.output(40, True)
-        # os.system('omxplayer -o local pm_invalido.mp3')
-        window = tk.Tk()
-        window.attributes('-fullscreen', True)
-        window.title(tittle)
-        window.configure(bg='red')
-        label1 = tk.Label(window, text="", bg="red")
-        label1.config(font=("Arial", 25))
-        label2 = tk.Label(window, text="", bg="red")
-        label2.config(font=("Arial", 25))
-        label3 = tk.Label(window, text=message, bg="red")
-        label3.config(font=("Arial", 25))
-        label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
-        window.bind("<FocusIn>")
-        label1.pack()
-        label2.pack()
-        label3.pack()
-        # GPIO.output(40, False)
-        window.after(3000, window.destroy())
-        window.mainloop()
 
     def openWindow(self, title, label1, label2, label3, color):
         status = label3
@@ -78,11 +31,11 @@ class OpenWindow(object):
         window.attributes('-fullscreen', True)
         window.title(title)
         window.configure(bg=color)
-        label1 = tk.Label(window, text=label1, bg=color)
+        label1 = tk.Label(window, text=title, bg=color)
         label1.config(font=("Arial", 25))
-        label2 = tk.Label(window, text=label2, bg=color)
+        label2 = tk.Label(window, text=title, bg=color)
         label2.config(font=("Arial", 25))
-        label3 = tk.Label(window, text=label3, bg=color)
+        label3 = tk.Label(window, text=title, bg=color)
         label3.config(font=("Arial", 25))
         label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
         window.bind("<FocusIn>")
@@ -90,18 +43,10 @@ class OpenWindow(object):
         label2.pack()
         label3.pack()
         # GPIO.output(40, False)
-        window.after(3000, destroy_windows)
+        window.after(3000, window.destroy)
         window.mainloop()
 
-
-
-
-
-
 class ConnectSite(object):
-    site = None
-    def __init__(self, site):
-        self.site = site
 
     @circuit_breaker()
     def requestGet(self, url, params):
@@ -129,6 +74,7 @@ class ConnectSite(object):
 
         except Exception:
             print(f"Call to {url} failed")
+
 
 class FullScreenApp(object):
         def __init__(self, master, **kwargs):
