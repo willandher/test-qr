@@ -21,7 +21,9 @@ class OpenWindow(object):
     def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
         status = label3
         print(status)
+        #GPIO.output(gpi2, True)
         window = tk.Tk()
+        GPIO.output(gpi1, True)
         window.attributes('-fullscreen', True)
         window.title(title)
         window.configure(bg=color)
@@ -36,11 +38,10 @@ class OpenWindow(object):
         label1.pack()
         label2.pack()
         label3.pack()
-        GPIO.output(gpi1, True)
-        #GPIO.output(gpi2, True)
-        os.system(command)
         #GPIO.output(gpi3, False)
-        window.after(3000, window.destroy)
+        GPIO.output(gpi1, True)
+        os.system(command)
+        window.after(4000, window.destroy)
         window.mainloop()
 
 
@@ -95,13 +96,12 @@ class FullScreenApp(object):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(29, GPIO.OUT)
         GPIO.setup(33, GPIO.OUT)
-        GPIO.setup(40, GPIO.OUT)
+        #GPIO.setup(40, GPIO.OUT)
         GPIO.output(29, False)
         GPIO.output(33, False)
-        GPIO.output(40, False)
+        #GPIO.output(40, False)
 
-    def validateUrl(url, connetVacuno):
-        openWindow = OpenWindow()
+    def validateUrl(url, connetVacuno, openWindow):
         findRequestSign = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBHBNWPNPGF33TnGCKbY_6Tw_LTdTcYYIA"
         parsed = urlparse.urlparse(url)
         if parsed.netloc == "scanmevacuno.gob.cl":
@@ -169,11 +169,12 @@ class FullScreenApp(object):
     def readSerialOne(Thread):
         ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
         connetVacuno = ConnectSite()
+        openWindow = OpenWindow()
         while True:
             line = ser.readline().decode()
             if len(line) > 0:
                 print(line)
-                FullScreenApp.validateUrl(line, connetVacuno)
+                FullScreenApp.validateUrl(line, connetVacuno,openWindow)
                 time.sleep(0.1)
 
     try:
