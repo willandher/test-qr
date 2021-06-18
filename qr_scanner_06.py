@@ -11,7 +11,7 @@ import urllib.parse as urlparse
 import tkinter as tk
 import time
 import winsound
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import _thread
 import threading
 from multiprocessing import Process, Queue
@@ -43,9 +43,9 @@ class OpenWindow(object):
     def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
         status = label3
         print(status)
-        #GPIO.output(gpi2, True)
+        GPIO.output(gpi2, True)
         window = tk.Tk()
-        #GPIO.output(gpi1, True)
+        GPIO.output(gpi1, True)
         window.attributes('-fullscreen', True)
         window.title(title)
         window.configure(bg=color)
@@ -61,8 +61,8 @@ class OpenWindow(object):
         label2.pack()
         label3.pack()
         winsound.PlaySound(command, winsound.SND_ASYNC)
-        #GPIO.output(gpi3, False)
-        #GPIO.output(gpi1, True)
+        GPIO.output(gpi3, False)
+        GPIO.output(gpi1, True)
         window.after(3000, window.destroy)
         window.mainloop()
 
@@ -115,15 +115,15 @@ class FullScreenApp(object):
         self.master.geometry(self._geom)
         self._geom = geom
 
-    #def initRaspberry():
-    #    GPIO.setwarnings(False)
-    #    GPIO.setmode(GPIO.BOARD)
-    #    GPIO.setup(29, GPIO.OUT)
-    #    GPIO.setup(33, GPIO.OUT)
-    #    #GPIO.setup(40, GPIO.OUT)
-    #    GPIO.output(29, False)
-    #    GPIO.output(33, False)
-    #    #GPIO.output(40, False)
+    def initRaspberry():
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(29, GPIO.OUT)
+        GPIO.setup(33, GPIO.OUT)
+        #GPIO.setup(40, GPIO.OUT)
+        GPIO.output(29, False)
+        GPIO.output(33, False)
+        #GPIO.output(40, False)
 
     def validateUrl(url, connetVacuno, openWindow):
         findRequestSign = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBHBNWPNPGF33TnGCKbY_6Tw_LTdTcYYIA"
@@ -198,8 +198,14 @@ class FullScreenApp(object):
        #     line = ser.readline().decode()
        #     if len(line) > 0:
         #print(line)
+        time.sleep(3)
         FullScreenApp.validateUrl("https://scanmevacuno.gob.cl/?a=109355338&b=1614219941&c=0", connetVacuno, openWindow)
-        time.sleep(0.1)
+        time.sleep(3)
+        FullScreenApp.validateUrl("https://comisariavirtual.cl/tramites/pdf/verifica.html?id=16223093312878ee6441b-3217-4860-84dc-2fbbdfad5c35&ate=2021/06/08&tramiteId=135", connetVacuno, openWindow)
+        time.sleep(3)
+        FullScreenApp.validateUrl(
+            "https://comisariavirtual.cl/tramites/pdf/verifica.html?id=16223093312878ee6441b-3217-4860-84dc-2fbbdfad5c35&ate=2021/06/18&tramiteId=135",
+            connetVacuno, openWindow)
 
     try:
         _thread.start_new_thread(readSerialOne, ("QR-1",))
@@ -207,7 +213,7 @@ class FullScreenApp(object):
         print("Error: unable to start thread")
 
 
-#FullScreenApp.initRaspberry()
+FullScreenApp.initRaspberry()
 
 while 1:
     pass
