@@ -12,7 +12,7 @@ import time
 import RPi.GPIO as GPIO
 import _thread
 from pygame import mixer
-from serial import Serial
+import serial
 
 from circuit_breaker import circuit_breaker
 
@@ -191,7 +191,7 @@ class FullScreenApp(object):
                                       "red", "err_validacion.mp3", 33, 40, 40)
 
     def readSerialOne(Thread):
-        ser = Serial('/dev/ttyUSB0', 9600, timeout=0)
+        ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
         connetVacuno = ConnectSite()
         openWindow = OpenWindow()
         while True:
