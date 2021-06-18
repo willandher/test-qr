@@ -1,6 +1,5 @@
 import argparse
 from logging import root
-import serial
 import http.client
 import os, sys
 import requests
@@ -10,12 +9,10 @@ import json
 import urllib.parse as urlparse
 import tkinter as tk
 import time
-import winsound
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import _thread
-import threading
-from multiprocessing import Process, Queue
-from time import sleep
+from pygame import mixer
+from serial import Serial
 
 from circuit_breaker import circuit_breaker
 
@@ -36,7 +33,7 @@ class OpenWindow(object):
             proc.join()
 
     def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
-        OpenWindow.run_parallel(OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3), OpenWindow.stardSounds(command))
+        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3)
 
 
 
@@ -45,7 +42,7 @@ class OpenWindow(object):
         print(status)
         #GPIO.output(gpi2, True)
         window = tk.Tk()
-        #GPIO.output(gpi1, True)
+        GPIO.output(gpi1, True)
         window.attributes('-fullscreen', True)
         window.title(title)
         window.configure(bg=color)
@@ -60,7 +57,10 @@ class OpenWindow(object):
         label1.pack()
         label2.pack()
         label3.pack()
-        winsound.PlaySound(command, winsound.SND_ASYNC)
+        mixer.init()
+        mixer.music.load(command)
+        mixer.music.play()
+        #winsound.PlaySound(command, winsound.SND_ASYNC)
         #GPIO.output(gpi3, False)
         #GPIO.output(gpi1, True)
         window.after(3000, window.destroy)
@@ -115,15 +115,15 @@ class FullScreenApp(object):
         self.master.geometry(self._geom)
         self._geom = geom
 
-    #def initRaspberry():
-    #    GPIO.setwarnings(False)
-    #    GPIO.setmode(GPIO.BOARD)
-    #    GPIO.setup(29, GPIO.OUT)
-    #    GPIO.setup(33, GPIO.OUT)
-    #    #GPIO.setup(40, GPIO.OUT)
-    #    GPIO.output(29, False)
-    #    GPIO.output(33, False)
-    #    #GPIO.output(40, False)
+    def initRaspberry():
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(29, GPIO.OUT)
+        GPIO.setup(33, GPIO.OUT)
+        #GPIO.setup(40, GPIO.OUT)
+        GPIO.output(29, False)
+        GPIO.output(33, False)
+        #GPIO.output(40, False)
 
     def validateUrl(url, connetVacuno, openWindow):
         findRequestSign = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBHBNWPNPGF33TnGCKbY_6Tw_LTdTcYYIA"
@@ -191,15 +191,15 @@ class FullScreenApp(object):
                                       "red", "err_validacion.mp3", 33, 40, 40)
 
     def readSerialOne(Thread):
-        #ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
+        ser = Serial('/dev/ttyUSB0', 9600, timeout=0)
         connetVacuno = ConnectSite()
         openWindow = OpenWindow()
-       # while True:
-       #     line = ser.readline().decode()
-       #     if len(line) > 0:
-        #print(line)
-        FullScreenApp.validateUrl("https://scanmevacuno.gob.cl/?a=109355338&b=1614219941&c=0", connetVacuno, openWindow)
-        time.sleep(0.1)
+        while True:
+            line = ser.readline().decode()
+            if len(line) > 0:
+                print(line)
+                FullScreenApp.validateUrl(line, connetVacuno, openWindow)
+                time.sleep(0.1)
 
     try:
         _thread.start_new_thread(readSerialOne, ("QR-1",))
@@ -207,7 +207,7 @@ class FullScreenApp(object):
         print("Error: unable to start thread")
 
 
-#FullScreenApp.initRaspberry()
+FullScreenApp.initRaspberry()
 
 while 1:
     pass

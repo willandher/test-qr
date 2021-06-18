@@ -16,6 +16,7 @@ import _thread
 import threading
 from multiprocessing import Process, Queue
 from time import sleep
+from pygame import mixer
 
 from circuit_breaker import circuit_breaker
 
@@ -36,7 +37,7 @@ class OpenWindow(object):
             proc.join()
 
     def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
-        OpenWindow.run_parallel(OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3), OpenWindow.stardSounds(command))
+        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3)
 
 
 
@@ -60,7 +61,10 @@ class OpenWindow(object):
         label1.pack()
         label2.pack()
         label3.pack()
-        winsound.PlaySound(command, winsound.SND_ASYNC)
+        mixer.init()
+        mixer.music.load(command)
+        mixer.music.play()
+        #winsound.PlaySound(command, winsound.SND_ASYNC)
         GPIO.output(gpi3, False)
         GPIO.output(gpi1, True)
         window.after(3000, window.destroy)
