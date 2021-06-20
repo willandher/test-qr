@@ -66,9 +66,6 @@ class OpenWindow(object):
         window.after(3000, window.destroy)
         window.mainloop()
 
-    def stardSounds(sound):
-        os.system(sound)
-
 class ConnectSite(object):
 
     @circuit_breaker()
@@ -163,15 +160,27 @@ class FullScreenApp(object):
                 status = dataJsonNeo.get('result').get('payload').get('global_status')
                 print(status)
                 if status == "green":
-                    openWindow.openWindow("Control Acceso", "", "", "", "green", "pm_valido.mp3", 29,
+                    openWindow.openWindow("Control Acceso", "", "Bienvenido", "Pase de movilidad válido bienvenido", "green", "pm_valido.mp3", 29,
                                           40, 40)
                 else:
-                    openWindow.openWindow("Control Acceso", "", "", "Pase Invalido", "red",
+                    openWindow.openWindow("Control Acceso", "", "Algo salio mal", "Pase de movilidad inválido  favor acercarse al guardia", "red",
                                           "pm_invalido.mp3", 33, 40, 40)
 
             except:
-                openWindow.openWindow("Control Acceso", "", "Algo Salio Mal", "Favor Acercarse al Guardia", "red",
+                openWindow.openWindow("Control Acceso", "", "Algo Salio Mal", "Error de validación por favor acercarse al guardia", "red",
                                       "err_validacion.mp3", 33, 40, 40)
+
+
+        elif parsed.netloc == "cmv.interior.gob.cl" :
+            try :
+                openWindow.openWindow("Control Acceso", "", "Algo salio mal",
+                                      "Pase de movilidad inválido  favor acercarse al guardia", "red",
+                                      "pm_invalido.mp3", 33, 40, 40)
+            except:
+                openWindow.openWindow("Control Acceso", "", "Algo Salio Mal",
+                                      "Error de validación por favor acercarse al guardia", "red",
+                                      "err_validacion.mp3", 33, 40, 40)
+
         else:
             try:
                 date2 = urlparse.parse_qs(parsed.query)['date'][0]
@@ -180,14 +189,14 @@ class FullScreenApp(object):
                 # print(date)
                 # print(datetime.today().date())
                 if date.date() == datetime.today().date():
-                    openWindow.openWindow("Control Acceso", "", "Todo Ok", "Bienvenido", "green",
+                    openWindow.openWindow("Control Acceso", "", "Bienvendio", "Pase de comisaría virtual válido bienvenido", "green",
                                           "pcv_valido.mp3", 29, 40, 40)
                 else:
-                    openWindow.openWindow("Control Acceso", "", "", "Pase Invalido", "red",
+                    openWindow.openWindow("Control Acceso", "", "Algo salio mal", "Pase de comisaría virtual inválido favor acercarse al guardia", "red",
                                           "pcv_invalido.mp3", 33, 40, 40)
 
             except:
-                openWindow.openWindow("Control Acceso", "", "Algo Salio Mal", "Favor Acercarse al Guardia",
+                openWindow.openWindow("Control Acceso", "", "Algo salio mal", "Error de validación favor acercarse al guardia",
                                       "red", "err_validacion.mp3", 33, 40, 40)
 
     def readSerialOne(Thread):
