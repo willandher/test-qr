@@ -37,25 +37,28 @@ class OpenWindow(object):
 
 
 
-    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
+    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image):
         status = label3
         print(status)
         window = tk.Tk()
         GPIO.output(gpi1, True)
-        window.attributes('-fullscreen', True)
-        window.title(title)
-        window.configure(bg=color)
-        label1 = tk.Label(window, text=label1, bg=color)
-        label1.config(font=("Arial", 25))
-        label2 = tk.Label(window, text=label2, bg=color)
-        label2.config(font=("Arial", 25))
-        label3 = tk.Label(window, text=label3, bg=color)
-        label3.config(font=("Arial", 25))
-        label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
-        window.bind("<FocusIn>")
-        label1.pack()
-        label2.pack()
-        label3.pack()
+        window.geometry()
+        image = tk.PhotoImage(file=image)
+        fondo = tk.Label(window, image=image).place(x=0,y=0)
+        #window.attributes('-fullscreen', True)
+        #window.title(title)
+        #window.configure(bg=color)
+        #label1 = tk.Label(window, text=label1, bg=color)
+        #label1.config(font=("Arial", 25))
+        #label2 = tk.Label(window, text=label2, bg=color)
+        #label2.config(font=("Arial", 25))
+        #label3 = tk.Label(window, text=label3, bg=color)
+        #label3.config(font=("Arial", 25))
+        #label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
+        #window.bind("<FocusIn>")
+        #label1.pack()
+        #label2.pack()
+        #label3.pack()
         mixer.init()
         mixer.music.load(command)
         mixer.music.play()
@@ -157,25 +160,25 @@ class FullScreenApp(object):
                 print(status)
                 if status == "green":
                     openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de movilidad válido", "green", "pm_valido.mp3", 29,
-                                          40, 40)
+                                          40, 40, "robot.jpeg")
                 else:
                     openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de movilidad inválido\nFavor acercarse al guardia", "red",
-                                          "pm_invalido.mp3", 33, 40, 40)
+                                          "pm_invalido.mp3", 33, 40, 40, "robot.jpeg")
 
             except:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación\nPor favor acercarse al guardia", "red",
-                                      "err_validacion.mp3", 33, 40, 40)
+                                      "err_validacion.mp3", 33, 40, 40, "robot.jpeg")
 
 
         elif parsed.netloc == "cmv.interior.gob.cl" :
             try :
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
                                       "El pase único colectivo no es válido para ingresar", "red",
-                                      "puc_novalido.mp3", 33, 40, 40)
+                                      "puc_novalido.mp3", 33, 40, 40, "robot.jpeg")
             except:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
                                       "Error de validación por favor acercarse al guardia", "red",
-                                      "err_validacion.mp3", 33, 40, 40)
+                                      "err_validacion.mp3", 33, 40, 40, "robot.jpeg")
 
         else:
             try:
@@ -186,14 +189,14 @@ class FullScreenApp(object):
                 # print(datetime.today().date())
                 if date.date() == datetime.today().date():
                     openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de comisaría virtual válido", "green",
-                                          "pcv_valido.mp3", 29, 40, 40)
+                                          "pcv_valido.mp3", 29, 40, 40, "robot.jpeg")
                 else:
                     openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de comisaría virtual inválido\nFavor acercarse al guardia", "red",
-                                          "pcv_invalido.mp3", 33, 40, 40)
+                                          "pcv_invalido.mp3", 33, 40, 40, "robot.jpeg")
 
             except:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación\nFavor acercarse al guardia",
-                                      "red", "err_validacion.mp3", 33, 40, 40)
+                                      "red", "err_validacion.mp3", 33, 40, 40, "robot.jpeg")
 
     def readSerialOne(Thread):
         ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
