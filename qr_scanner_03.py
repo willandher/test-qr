@@ -160,21 +160,21 @@ class FullScreenApp(object):
                 status = dataJsonNeo.get('result').get('payload').get('global_status')
                 print(status)
                 if status == "green":
-                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de movilidad válido bienvenido", "green", "pm_valido.mp3", 29,
+                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de movilidad válido", "green", "pm_valido.mp3", 29,
                                           40, 40)
                 else:
-                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de movilidad inválido  favor acercarse al guardia", "red",
+                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de movilidad inválido\nFavor acercarse al guardia", "red",
                                           "pm_invalido.mp3", 33, 40, 40)
 
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación por favor acercarse al guardia", "red",
+                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación\nPor favor acercarse al guardia", "red",
                                       "err_validacion.mp3", 33, 40, 40)
 
 
         elif parsed.netloc == "cmv.interior.gob.cl" :
             try :
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                      "El pase único colectivo no es válido para ingresar ", "red",
+                                      "El pase único colectivo no es válido para ingresar", "red",
                                       "puc_novalido.mp3", 33, 40, 40)
             except:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
@@ -189,14 +189,14 @@ class FullScreenApp(object):
                 # print(date)
                 # print(datetime.today().date())
                 if date.date() == datetime.today().date():
-                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de comisaría virtual válido bienvenido", "green",
+                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de comisaría virtual válido", "green",
                                           "pcv_valido.mp3", 29, 40, 40)
                 else:
-                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de comisaría virtual inválido favor acercarse al guardia", "red",
+                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de comisaría virtual inválido\nFavor acercarse al guardia", "red",
                                           "pcv_invalido.mp3", 33, 40, 40)
 
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación favor acercarse al guardia",
+                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación\nFavor acercarse al guardia",
                                       "red", "err_validacion.mp3", 33, 40, 40)
 
     def readSerialOne(Thread):
