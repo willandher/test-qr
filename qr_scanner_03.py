@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 import _thread
 from pygame import mixer
 import serial
-from PIL import ImageTk, Image
+from PIL import Image
 
 from circuit_breaker import circuit_breaker
 
