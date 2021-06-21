@@ -47,11 +47,11 @@ class OpenWindow(object):
         window.title(title)
         window.configure(bg=color)
         label1 = tk.Label(window, text=label1, bg=color)
-        label1.config(font=("Arial", 25))
+        label1.config(font=("Arial", 23))
         label2 = tk.Label(window, text=label2, bg=color)
-        label2.config(font=("Arial", 25))
+        label2.config(font=("Arial", 23))
         label3 = tk.Label(window, text=label3, bg=color)
-        label3.config(font=("Arial", 25))
+        label3.config(font=("Arial", 23))
         label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
         window.bind("<FocusIn>")
         label1.pack()
@@ -174,8 +174,8 @@ class FullScreenApp(object):
         elif parsed.netloc == "cmv.interior.gob.cl" :
             try :
                 openWindow.openWindow("Control Acceso", "", "Algo salio mal",
-                                      "Pase de movilidad inválido  favor acercarse al guardia", "red",
-                                      "pm_invalido.mp3", 33, 40, 40)
+                                      "El pase único colectivo no es válido para ingresar ", "red",
+                                      "puc_novalido.mp3", 33, 40, 40)
             except:
                 openWindow.openWindow("Control Acceso", "", "Algo Salio Mal",
                                       "Error de validación por favor acercarse al guardia", "red",
