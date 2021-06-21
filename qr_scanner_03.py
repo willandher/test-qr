@@ -64,6 +64,7 @@ class OpenWindow(object):
         mixer.init()
         mixer.music.load(command)
         mixer.music.play()
+        GPIO.output(gpi1, False)
         window.after(3000, window.destroy)
         window.mainloop()
 
