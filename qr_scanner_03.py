@@ -185,7 +185,7 @@ class FullScreenApp(object):
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
                                       "El pase único colectivo no es válido para ingresar", "red",
                                       FullScreenApp.path_base_audio.format("puc_novalido.mp3"), 33, 40, 40,
-                                      FullScreenApp.path_base_image.format("movilidad-valido.png"))
+                                      FullScreenApp.path_base_image.format("pase-colectivo.png"))
             except:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
                                       "Error de validación por favor acercarse al guardia", "red",
@@ -218,7 +218,6 @@ class FullScreenApp(object):
 
     def readSerialOne(Thread):
         ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
-        FullScreenApp.initRaspberry()
         conn_vacuno = ConnectSite()
         open_window = OpenWindow()
         while True:
@@ -233,6 +232,7 @@ class FullScreenApp(object):
     except:
         print("Error: unable to start thread")
 
+FullScreenApp.initRaspberry()
 
 while 1:
     pass
