@@ -106,6 +106,8 @@ class ConnectSite(object):
 
 
 class FullScreenApp(object):
+    path_base_audio = 'assets/audio/{}'
+    path_base_image = 'assets/image/{}'
     def __init__(self, master, **kwargs):
         self.master = master
         pad = 3
@@ -121,7 +123,7 @@ class FullScreenApp(object):
         self.master.geometry(self._geom)
         self._geom = geom
 
-    def initRaspberry(self):
+    def initRaspberry():
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(29, GPIO.OUT)
