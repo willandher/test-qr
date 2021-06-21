@@ -32,8 +32,8 @@ class OpenWindow(object):
         for proc in processes:
             proc.join()
 
-    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
-        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3)
+    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image):
+        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image)
 
 
 
