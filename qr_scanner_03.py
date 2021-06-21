@@ -40,7 +40,6 @@ class OpenWindow(object):
     def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
         status = label3
         print(status)
-        #GPIO.output(gpi2, True)
         window = tk.Tk()
         GPIO.output(gpi1, True)
         window.attributes('-fullscreen', True)
@@ -51,7 +50,7 @@ class OpenWindow(object):
         label2 = tk.Label(window, text=label2, bg=color)
         label2.config(font=("Arial", 25))
         label3 = tk.Label(window, text=label3, bg=color)
-        label3.config(font=("Arial", 23))
+        label3.config(font=("Arial", 25))
         label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
         window.bind("<FocusIn>")
         label1.pack()
@@ -60,9 +59,6 @@ class OpenWindow(object):
         mixer.init()
         mixer.music.load(command)
         mixer.music.play()
-        #winsound.PlaySound(command, winsound.SND_ASYNC)
-        #GPIO.output(gpi3, False)
-        #GPIO.output(gpi1, True)
         window.after(3000, window.destroy)
         window.mainloop()
 
