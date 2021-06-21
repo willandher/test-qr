@@ -10,13 +10,13 @@ import json
 import urllib.parse as urlparse
 import tkinter as tk
 import time
-import winsound
 import RPi.GPIO as GPIO
 import _thread
 import threading
 from multiprocessing import Process, Queue
 from time import sleep
 from pygame import mixer
+from PIL import Image,ImageTk
 
 from circuit_breaker import circuit_breaker
 
@@ -36,39 +36,43 @@ class OpenWindow(object):
         for proc in processes:
             proc.join()
 
-    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
-        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3)
+    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image):
+        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image)
 
 
 
-    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3):
+    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image):
         status = label3
         print(status)
-        GPIO.output(gpi2, True)
         window = tk.Tk()
         GPIO.output(gpi1, True)
+        imageLoad = Image.open(image)
+        imageResize = imageLoad.resize((window.winfo_screenwidth(),window.winfo_screenheight()))
+        imagePrint = ImageTk.PhotoImage(imageResize)
+        fondo = tk.Label(window, image=imagePrint).place(x=0,y=0)
         window.attributes('-fullscreen', True)
-        window.title(title)
-        window.configure(bg=color)
-        label1 = tk.Label(window, text=label1, bg=color)
-        label1.config(font=("Arial", 25))
-        label2 = tk.Label(window, text=label2, bg=color)
-        label2.config(font=("Arial", 25))
-        label3 = tk.Label(window, text=label3, bg=color)
-        label3.config(font=("Arial", 25))
-        label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
-        window.bind("<FocusIn>")
-        label1.pack()
-        label2.pack()
-        label3.pack()
+        print("tamaño de la pantalla: ", window.winfo_screenwidth(),window.winfo_screenheight())
+#         fondo.pack()
+        #window.attributes('-fullscreen', True)
+        #window.title(title)
+        #window.configure(bg=color)
+        #label1 = tk.Label(window, text=label1, bg=color)
+        #label1.config(font=("Arial", 25))
+        #label2 = tk.Label(window, text=label2, bg=color)
+        #label2.config(font=("Arial", 25))
+        #label3 = tk.Label(window, text=label3, bg=color)
+        #label3.config(font=("Arial", 25))
+        #label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
+        #window.bind("<FocusIn>")
+        #label1.pack()
+        #label2.pack()
+        #label3.pack()
         mixer.init()
         mixer.music.load(command)
         mixer.music.play()
-        #winsound.PlaySound(command, winsound.SND_ASYNC)
-        GPIO.output(gpi3, False)
-        GPIO.output(gpi1, True)
         window.after(3000, window.destroy)
         window.mainloop()
+
 
     def stardSounds(sound):
         os.system(sound)
@@ -168,14 +172,14 @@ class FullScreenApp(object):
                 print(status)
                 if status == "green":
                     openWindow.openWindow("Control Acceso", "", "", "", "green", "pm_valido.mp3", 29,
-                                          40, 40)
+                                          40, 40, "robot.png")
                 else:
                     openWindow.openWindow("Control Acceso", "", "", "Pase Invalido", "red",
-                                          "pm_invalido.mp3", 33, 40, 40)
+                                          "pm_invalido.mp3", 33, 40, 40, "robot.png")
 
             except:
                 openWindow.openWindow("Control Acceso", "", "Algo Salio Mal", "Favor Acercarse al Guardia", "red",
-                                      "err_validacion.mp3", 33, 40, 40)
+                                      "err_validacion.mp3", 33, 40, 40, "robot.png")
         else:
             try:
                 date2 = urlparse.parse_qs(parsed.query)['date'][0]
@@ -185,14 +189,14 @@ class FullScreenApp(object):
                 # print(datetime.today().date())
                 if date.date() == datetime.today().date():
                     openWindow.openWindow("Control Acceso", "", "Todo Ok", "Bienvenido", "green",
-                                          "pcv_valido.mp3", 29, 40, 40)
+                                          "pcv_valido.mp3", 29, 40, 40, "robot.png")
                 else:
                     openWindow.openWindow("Control Acceso", "", "", "Pase Invalido", "red",
-                                          "pcv_invalido.mp3", 33, 40, 40)
+                                          "pcv_invalido.mp3", 33, 40, 40, "robot.png")
 
             except:
                 openWindow.openWindow("Control Acceso", "", "Algo Salio Mal", "Favor Acercarse al Guardia",
-                                      "red", "err_validacion.mp3", 33, 40, 40)
+                                      "red", "err_validacion.mp3", 33, 40, 40, "robot.png")
 
     def readSerialOne(Thread):
         #ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)

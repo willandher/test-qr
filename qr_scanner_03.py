@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 import _thread
 from pygame import mixer
 import serial
-from PIL import Image
+from PIL import Image,ImageTk
 
 from circuit_breaker import circuit_breaker
 
@@ -43,10 +43,12 @@ class OpenWindow(object):
         print(status)
         window = tk.Tk()
         GPIO.output(gpi1, True)
-        window.geometry()
-        load = Image.open(image)
-        imageO = tk.PhotoImage(file=load)
-        fondo = tk.Label(window, image=imageO).place(x=0,y=0)
+        imageLoad = Image.open(image)
+        imageResize = imageLoad.resize((window.winfo_screenwidth(),window.winfo_screenheight()))
+        imagePrint = ImageTk.PhotoImage(imageResize)
+        fondo = tk.Label(window, image=imagePrint).place(x=0,y=0)
+        window.attributes('-fullscreen', True)
+        print("tamaño de la pantalla: ", window.winfo_screenwidth(),window.winfo_screenheight())
         #window.attributes('-fullscreen', True)
         #window.title(title)
         #window.configure(bg=color)

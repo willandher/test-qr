@@ -5,7 +5,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 
-image = "robot.jpeg"
+image = "robot.png"
 
 class MiApp:
 
