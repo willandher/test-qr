@@ -3,7 +3,8 @@ from PIL import ImageTk, Image
 import os
 
 class Application(Frame):
-    
+    path_base_audio = 'assets/audio/{}'
+    path_base_image = 'assets/image/{}'
     def __init__(self, parent):
         Frame.__init__(self,parent)
         self.pack(fill=BOTH, expand=True)
@@ -24,6 +25,7 @@ class Application(Frame):
         self.viewWindow.pack(side=TOP, fill=BOTH, expand=True)
 
     def getImage(self):
+        print(Application.path_base_audio.join("veamos.png"))
         imageFile = Image.open("robot.png")
         image = imageFile.resize((200,100)) 
         imageFile = ImageTk.PhotoImage(image)
@@ -33,6 +35,8 @@ class Application(Frame):
     def exitProgram(self):
         os._exit(0)
 
+
+print(Application.path_base_audio.format("veamos.png"))
 root = Tk()
 root.title("Photo Zone")
 root.wm_state('normal')

@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 import _thread
 from pygame import mixer
 import serial
-from PIL import Image,ImageTk
+from PIL import Image, ImageTk
 
 from circuit_breaker import circuit_breaker
 
@@ -33,41 +33,40 @@ class OpenWindow(object):
         for proc in processes:
             proc.join()
 
-    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image):
-        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image)
+    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image):
+        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image)
 
-
-
-    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3,image):
+    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image):
         status = label3
         print(status)
         window = tk.Tk()
         GPIO.output(gpi1, True)
         imageLoad = Image.open(image)
-        imageResize = imageLoad.resize((window.winfo_screenwidth(),window.winfo_screenheight()))
+        imageResize = imageLoad.resize((window.winfo_screenwidth(), window.winfo_screenheight()))
         imagePrint = ImageTk.PhotoImage(imageResize)
-        fondo = tk.Label(window, image=imagePrint).place(x=0,y=0)
+        fondo = tk.Label(window, image=imagePrint).place(x=0, y=0)
         window.attributes('-fullscreen', True)
-        print("tamaño de la pantalla: ", window.winfo_screenwidth(),window.winfo_screenheight())
-        #window.attributes('-fullscreen', True)
-        #window.title(title)
-        #window.configure(bg=color)
-        #label1 = tk.Label(window, text=label1, bg=color)
-        #label1.config(font=("Arial", 25))
-        #label2 = tk.Label(window, text=label2, bg=color)
-        #label2.config(font=("Arial", 25))
-        #label3 = tk.Label(window, text=label3, bg=color)
-        #label3.config(font=("Arial", 25))
-        #label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
-        #window.bind("<FocusIn>")
-        #label1.pack()
-        #label2.pack()
-        #label3.pack()
+        print("tamaño de la pantalla: ", window.winfo_screenwidth(), window.winfo_screenheight())
+        # window.attributes('-fullscreen', True)
+        # window.title(title)
+        # window.configure(bg=color)
+        # label1 = tk.Label(window, text=label1, bg=color)
+        # label1.config(font=("Arial", 25))
+        # label2 = tk.Label(window, text=label2, bg=color)
+        # label2.config(font=("Arial", 25))
+        # label3 = tk.Label(window, text=label3, bg=color)
+        # label3.config(font=("Arial", 25))
+        # label3.place(x=window.winfo_width() // 2, y=window.winfo_height() // 2, anchor='center')
+        # window.bind("<FocusIn>")
+        # label1.pack()
+        # label2.pack()
+        # label3.pack()
         mixer.init()
         mixer.music.load(command)
         mixer.music.play()
         window.after(3000, window.destroy)
         window.mainloop()
+
 
 class ConnectSite(object):
 
@@ -100,6 +99,8 @@ class ConnectSite(object):
 
 
 class FullScreenApp(object):
+    path_base_audio = 'assets/audio/{}'
+    path_base_image = 'assets/image/{}'
     def __init__(self, master, **kwargs):
         self.master = master
         pad = 3
@@ -115,15 +116,15 @@ class FullScreenApp(object):
         self.master.geometry(self._geom)
         self._geom = geom
 
-    def initRaspberry():
+    def initRaspberry(self):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(29, GPIO.OUT)
         GPIO.setup(33, GPIO.OUT)
-        #GPIO.setup(40, GPIO.OUT)
+        # GPIO.setup(40, GPIO.OUT)
         GPIO.output(29, False)
         GPIO.output(33, False)
-        #GPIO.output(40, False)
+        # GPIO.output(40, False)
 
     def validateUrl(url, connetVacuno, openWindow):
         findRequestSign = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBHBNWPNPGF33TnGCKbY_6Tw_LTdTcYYIA"
@@ -157,32 +158,39 @@ class FullScreenApp(object):
                     'Authorization': bearer,
                     'Content-Type': 'application/json'
                 }
-                findRequestValidate = "https://us-central1-scanner-mevacuno.cloudfunctions.net/neogcscanner"
-                responseFileValidate = connetVacuno.requestPost(findRequestValidate, payloadNeo, headersNeo)
-                dataJsonNeo = json.loads(responseFileValidate.content.decode("utf-8"))
+                find_request_validate = "https://us-central1-scanner-mevacuno.cloudfunctions.net/neogcscanner"
+                response_file_validate = connetVacuno.requestPost(find_request_validate, payloadNeo, headersNeo)
+                dataJsonNeo = json.loads(response_file_validate.content.decode("utf-8"))
                 status = dataJsonNeo.get('result').get('payload').get('global_status')
                 print(status)
                 if status == "green":
-                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de movilidad válido", "green", "pm_valido.mp3", 29,
-                                          40, 40, "robot.jpeg")
+                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de movilidad válido", "green",
+                                          FullScreenApp.path_base_audio.format("pm_valido.mp3"), 29,
+                                          40, 40, FullScreenApp.path_base_image.format("movilidad-valido.png"))
                 else:
-                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de movilidad inválido\nFavor acercarse al guardia", "red",
-                                          "pm_invalido.mp3", 33, 40, 40, "robot.jpeg")
+                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
+                                          "Pase de movilidad inválido\nFavor acercarse al guardia", "red",
+                                          FullScreenApp.path_base_audio.format("pm_invalido.mp3"), 33, 40, 40,
+                                          FullScreenApp.path_base_image.format("movilidad-invalido.png"))
 
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación\nPor favor acercarse al guardia", "red",
-                                      "err_validacion.mp3", 33, 40, 40, "robot.jpeg")
+                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
+                                      "Error de validación\nPor favor acercarse al guardia", "red",
+                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33, 40, 40,
+                                      FullScreenApp.path_base_image.format("error_validacion.png"))
 
 
-        elif parsed.netloc == "cmv.interior.gob.cl" :
-            try :
+        elif parsed.netloc=="cmv.interior.gob.cl":
+            try:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
                                       "El pase único colectivo no es válido para ingresar", "red",
-                                      "puc_novalido.mp3", 33, 40, 40, "robot.jpeg")
+                                      FullScreenApp.path_base_audio.format("puc_novalido.mp3"), 33, 40, 40,
+                                      FullScreenApp.path_base_image.format("movilidad-valido.png"))
             except:
                 openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
                                       "Error de validación por favor acercarse al guardia", "red",
-                                      "err_validacion.mp3", 33, 40, 40, "robot.jpeg")
+                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33, 40, 40,
+                                      FullScreenApp.path_base_image.format("pase-colectivo.png"))
 
         else:
             try:
@@ -192,25 +200,32 @@ class FullScreenApp(object):
                 # print(date)
                 # print(datetime.today().date())
                 if date.date() == datetime.today().date():
-                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de comisaría virtual válido", "green",
-                                          "pcv_valido.mp3", 29, 40, 40, "robot.jpeg")
+                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de comisaría virtual válido",
+                                          "green",
+                                          FullScreenApp.path_base_audio.format("pcv_valido.mp3"), 29, 40, 40,
+                                          FullScreenApp.path_base_image.format("comisaria-valido.png"))
                 else:
-                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Pase de comisaría virtual inválido\nFavor acercarse al guardia", "red",
-                                          "pcv_invalido.mp3", 33, 40, 40, "robot.jpeg")
+                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
+                                          "Pase de comisaría virtual inválido\nFavor acercarse al guardia", "red",
+                                          FullScreenApp.path_base_audio.format("pcv_invalido.mp3"), 33, 40, 40,
+                                          FullScreenApp.path_base_image.format("comisaria-invalido.png"))
 
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL", "Error de validación\nFavor acercarse al guardia",
-                                      "red", "err_validacion.mp3", 33, 40, 40, "robot.jpeg")
+                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
+                                      "Error de validación\nFavor acercarse al guardia","red",
+                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33, 40, 40,
+                                      FullScreenApp.path_base_image.format("error-validacion.png"))
 
     def readSerialOne(Thread):
         ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
-        connetVacuno = ConnectSite()
-        openWindow = OpenWindow()
+        FullScreenApp.initRaspberry()
+        conn_vacuno = ConnectSite()
+        open_window = OpenWindow()
         while True:
             line = ser.readline().decode()
             if len(line) > 0:
                 print(line)
-                FullScreenApp.validateUrl(line, connetVacuno, openWindow)
+                FullScreenApp.validateUrl(line, conn_vacuno, open_window)
                 time.sleep(0.1)
 
     try:
@@ -218,8 +233,6 @@ class FullScreenApp(object):
     except:
         print("Error: unable to start thread")
 
-
-FullScreenApp.initRaspberry()
 
 while 1:
     pass
