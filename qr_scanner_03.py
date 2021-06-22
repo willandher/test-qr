@@ -160,7 +160,7 @@ class FullScreenApp(object):
             except:
                 openWindow.openWindow("red",
                                       FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
-                                      FullScreenApp.path_base_image.format("error_validacion.png"))
+                                      FullScreenApp.path_base_image.format("error-validacion.png"))
 
 
         elif parsed.netloc=="cmv.interior.gob.cl":
