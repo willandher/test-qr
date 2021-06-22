@@ -51,7 +51,7 @@ class OpenWindow(object):
         mixer.music.play()
         window.after(3000, window.destroy)
         window.mainloop()
-        sleep(3)
+        time.sleep(3)
         GPIO.output(gpi1, False)
 
 
@@ -102,6 +102,11 @@ class FullScreenApp(object):
         print(geom, self._geom)
         self.master.geometry(self._geom)
         self._geom = geom
+    
+    def turn_off(green_pin, red_pin):
+        GPIO.output(green_pin, False)
+        GPIO.output(red_pin, False)
+        
 
     def initRaspberry():
         GPIO.setwarnings(False)
@@ -161,6 +166,7 @@ class FullScreenApp(object):
                 openWindow.openWindow("red",
                                       FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
                                       FullScreenApp.path_base_image.format("error-validacion.png"))
+                FullScreenApp.turn_off(29,33)
 
 
         elif parsed.netloc=="cmv.interior.gob.cl":
@@ -172,6 +178,7 @@ class FullScreenApp(object):
                 openWindow.openWindow("red",
                                       FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
                                       FullScreenApp.path_base_image.format("pase-colectivo.png"))
+                FullScreenApp.turn_off(29,33)
 
         else:
             try:
@@ -193,6 +200,7 @@ class FullScreenApp(object):
                 openWindow.openWindow("red",
                                       FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
                                       FullScreenApp.path_base_image.format("error-validacion.png"))
+                FullScreenApp.turn_off(29,33)
 
     def readSerialOne(Thread):
         ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0)
