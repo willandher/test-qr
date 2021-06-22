@@ -33,10 +33,10 @@ class OpenWindow(object):
         for proc in processes:
             proc.join()
 
-    def openWindow(self, title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image):
-        OpenWindow.openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image)
+    def openWindow(self color, command, gpi1, image):
+        OpenWindow.openWindowsSecundary(color, command, gpi1,image)
 
-    def openWindowsSecundary(title, label1, label2, label3, color, command, gpi1, gpi2, gpi3, image):
+    def openWindowsSecundary(color, command, gpi1, image):
         status = label3
         print(status)
         window = tk.Tk()
@@ -64,9 +64,10 @@ class OpenWindow(object):
         mixer.init()
         mixer.music.load(command)
         mixer.music.play()
-        GPIO.output(gpi1, False)
         window.after(3000, window.destroy)
         window.mainloop()
+        sleep(3)
+        GPIO.output(gpi1, False)
 
 
 class ConnectSite(object):
@@ -122,10 +123,8 @@ class FullScreenApp(object):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(29, GPIO.OUT)
         GPIO.setup(33, GPIO.OUT)
-        # GPIO.setup(40, GPIO.OUT)
         GPIO.output(29, False)
         GPIO.output(33, False)
-        # GPIO.output(40, False)
 
     def validateUrl(url, connetVacuno, openWindow):
         findRequestSign = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBHBNWPNPGF33TnGCKbY_6Tw_LTdTcYYIA"
@@ -165,32 +164,28 @@ class FullScreenApp(object):
                 status = dataJsonNeo.get('result').get('payload').get('global_status')
                 print(status)
                 if status == "green":
-                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de movilidad válido", "green",
+                    openWindow.openWindow("green",
                                           FullScreenApp.path_base_audio.format("pm_valido.mp3"), 29,
-                                          40, 40, FullScreenApp.path_base_image.format("movilidad-valido.png"))
+                                          FullScreenApp.path_base_image.format("movilidad-valido.png"))
                 else:
-                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                          "Pase de movilidad inválido\nFavor acercarse al guardia", "red",
-                                          FullScreenApp.path_base_audio.format("pm_invalido.mp3"), 33, 40, 40,
+                    openWindow.openWindow("red",
+                                          FullScreenApp.path_base_audio.format("pm_invalido.mp3"), 33,
                                           FullScreenApp.path_base_image.format("movilidad-invalido.png"))
 
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                      "Error de validación\nPor favor acercarse al guardia", "red",
-                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33, 40, 40,
+                openWindow.openWindow("red",
+                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
                                       FullScreenApp.path_base_image.format("error_validacion.png"))
 
 
         elif parsed.netloc=="cmv.interior.gob.cl":
             try:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                      "El pase único colectivo no es válido para ingresar", "red",
-                                      FullScreenApp.path_base_audio.format("puc_novalido.mp3"), 33, 40, 40,
+                openWindow.openWindow("red",
+                                      FullScreenApp.path_base_audio.format("puc_novalido.mp3"), 33,
                                       FullScreenApp.path_base_image.format("pase-colectivo.png"))
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                      "Error de validación por favor acercarse al guardia", "red",
-                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33, 40, 40,
+                openWindow.openWindow("red",
+                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
                                       FullScreenApp.path_base_image.format("pase-colectivo.png"))
 
         else:
@@ -201,20 +196,17 @@ class FullScreenApp(object):
                 # print(date)
                 # print(datetime.today().date())
                 if date.date() == datetime.today().date():
-                    openWindow.openWindow("Control Acceso", "", "BIENVENIDO", "Pase de comisaría virtual válido",
-                                          "green",
-                                          FullScreenApp.path_base_audio.format("pcv_valido.mp3"), 29, 40, 40,
+                    openWindow.openWindow("green",
+                                          FullScreenApp.path_base_audio.format("pcv_valido.mp3"), 29,
                                           FullScreenApp.path_base_image.format("comisaria-valido.png"))
                 else:
-                    openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                          "Pase de comisaría virtual inválido\nFavor acercarse al guardia", "red",
-                                          FullScreenApp.path_base_audio.format("pcv_invalido.mp3"), 33, 40, 40,
+                    openWindow.openWindow("red",
+                                          FullScreenApp.path_base_audio.format("pcv_invalido.mp3"), 33,
                                           FullScreenApp.path_base_image.format("comisaria-invalido.png"))
 
             except:
-                openWindow.openWindow("Control Acceso", "", "ALGO SALIÓ MAL",
-                                      "Error de validación\nFavor acercarse al guardia","red",
-                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33, 40, 40,
+                openWindow.openWindow("red",
+                                      FullScreenApp.path_base_audio.format("err_validacion.mp3"), 33,
                                       FullScreenApp.path_base_image.format("error-validacion.png"))
 
     def readSerialOne(Thread):
